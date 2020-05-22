@@ -1,17 +1,15 @@
 #ifndef _FANCY_H
 #define _FANCY_H
 
-#include "string"
-
 /**
-@from https://stackoverflow.com/questions/2616906/how-do-i-output-coloured-text-to-a-linux-terminal
-
+    @from https://stackoverflow.com/questions/2616906/how-do-i-output-coloured-text-to-a-linux-terminal
     \033[${style};${color}m${text}\033[0m
 */
-using std::string;
-using std::to_string;
 
 namespace Fancy {
+
+    using namespace std;
+
     enum class Color {
         Black = 30,
         Red,
