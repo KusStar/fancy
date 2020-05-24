@@ -56,6 +56,9 @@ namespace fancy {
 
         public:
             Fancy() : color_(Color::Default), style_(Style::Normal) {};
+            Fancy(const Color& color, const Style& style) : color_(color), style_(style) {};
+            Fancy(const Color& color) : color_(color) {};
+            Fancy(const Style& style) : style_(style) {};
 
             string operator() (const string& text) {
                 return detail::fancy_str(text, color_, style_);
@@ -77,7 +80,7 @@ namespace fancy {
                 return *this;
             }
 
-    }; // class Fancy
+    }; // class fancy::Fancy
 
 } // namespace fancy
 
