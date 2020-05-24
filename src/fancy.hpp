@@ -8,6 +8,7 @@
 
 namespace fancy {
 
+    #include <string>
     using namespace std;
 
     enum class Color {
