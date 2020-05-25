@@ -6,9 +6,13 @@
     \033[${style};${color}m${text}\033[0m
 */
 
+#pragma once
+
 namespace fancy {
 
     #include <string>
+    #include <ostream>
+
     using namespace std;
 
     enum class Color {
@@ -32,22 +36,28 @@ namespace fancy {
 
     namespace detail {
 
+        const string POSTIX = "\033[0m";
+
         template <typename T>
         string enum_str(T v) {
             return to_string((unsigned int) v);
         }
 
-        string fancy_str(const string& text, const Color& color, const Style& style) {
+        string prefix_str(const Color& color, const Style& style) {
             return "\033["
             + enum_str(style)
             + ";"
             + enum_str(color)
-            + "m"
-            + text
-            + "\033[0m";
+            + "m";
+        }
+
+        string fancy_str(const string& text, const Color& color, const Style& style) {
+            return prefix_str(color, style) + text + POSTIX;
         }
 
     } // namespace fancy::detail
+
+    const string ending = detail::POSTIX + "\n";
 
     class Fancy {
 
@@ -59,6 +69,11 @@ namespace fancy {
             Fancy(const Color& color, const Style& style) : color_(color), style_(style) {};
             Fancy(const Color& color) : color_(color) {};
             Fancy(const Style& style) : style_(style) {};
+
+            friend ostream& operator<< (ostream& os, const Fancy& f) {
+                os << detail::prefix_str(f.color_, f.style_);
+                return os;
+            }
 
             string operator() (const string& text) {
                 return detail::fancy_str(text, color_, style_);
