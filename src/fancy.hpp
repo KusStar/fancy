@@ -36,7 +36,7 @@ namespace fancy {
 
     namespace detail {
 
-        const string POSTIX = "\033[0m";
+        const string POSTFIX = "\033[0m";
 
         template <typename T>
         string enum_str(T v) {
@@ -52,12 +52,12 @@ namespace fancy {
         }
 
         string fancy_str(const string& text, const Color& color, const Style& style) {
-            return prefix_str(color, style) + text + POSTIX;
+            return prefix_str(color, style) + text + POSTFIX;
         }
 
     } // namespace fancy::detail
 
-    const string ending = detail::POSTIX + "\n";
+    const string ending = detail::POSTFIX + "\n";
 
     class Fancy {
 
