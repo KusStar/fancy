@@ -4,7 +4,7 @@
 
 ## Integration
 
-With [CPM.make](https://github.com/TheLartians/ModernCppStarter/blob/master/cmake/CPM.cmake)
+With [CPM.make](https://github.com/TheLartians/CPM.cmake)
 
 ```cmake
 # CMakeLists.txt
@@ -58,7 +58,7 @@ int main() {
 
 ## Thanks
 
-- [CPM.cmake](https://github.com/TheLartians/ModernCppStarter/blob/master/cmake/CPM.cmake)
+- [CPM.cmake](https://github.com/TheLartians/CPM.cmake)
 
 - [ModernCppStarter](https://github.com/TheLartians/ModernCppStarter)
 
