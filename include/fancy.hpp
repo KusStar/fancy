@@ -63,9 +63,9 @@ namespace fancy {
 
         template<typename Base, typename ...Rest>
         string stringer(const Base& base, const Rest& ...rest) {
-            const string padding = " ";
             string result = base;
-            if (sizeof...(rest)> 0) {
+            if (sizeof...(rest) > 0) {
+                const string padding = " ";
                 using List = int[];
                 (void) List { 0, ( result += padding, result += rest, 0 ) ... };
             }
