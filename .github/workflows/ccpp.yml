@@ -18,13 +18,5 @@ jobs:
     - uses: actions/checkout@v2
     - uses: snickerbockers/cmake-configure@prerel1
 
-    - name: CMake generate
-      run: |
-        cmake --version
-        cmake -Hstandalone -Bbuild/standalone
-
-    - name: Build standalone
-      run: cmake --build build/standalone
-
-    - name: Run
-      run: ./build/standalone/run
+    - name: Build and Run
+      run: make
