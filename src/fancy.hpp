@@ -10,12 +10,13 @@
 
 namespace fancy {
 
-    #include <string>
     #include <ostream>
+    #include <string>
+    #include <type_traits>
 
     using namespace std;
 
-    enum class Color {
+    enum class Color : unsigned int {
         Default = 29,
         Black,
         Red,
@@ -27,7 +28,7 @@ namespace fancy {
         White
     };
 
-    enum class Style {
+    enum class Style : unsigned int {
         Normal = 0,
         Bold = 1,
         Underline = 4,
@@ -39,8 +40,13 @@ namespace fancy {
         const string POSTFIX = "\033[0m";
 
         template <typename T>
+        auto enum_value(T v) -> unsigned int {
+            return static_cast<typename underlying_type<T>::type>(v);
+        }
+
+        template <typename T>
         string enum_str(T v) {
-            return to_string((unsigned int) v);
+            return to_string(enum_value(v));
         }
 
         string prefix_str(const Color& color, const Style& style) {
@@ -55,9 +61,22 @@ namespace fancy {
             return prefix_str(color, style) + text + POSTFIX;
         }
 
+        template<typename Base, typename ...Rest>
+        string stringer(const Base& base, const Rest& ...rest) {
+            const string padding = " ";
+            string result = base;
+            if (sizeof...(rest)> 0) {
+                using List = int[];
+                (void) List { 0, ( result += padding, result += rest, 0 ) ... };
+            }
+            return result;
+        }
+
     } // namespace fancy::detail
 
-    const string ending = detail::POSTFIX + "\n";
+    const string ending = detail::POSTFIX;
+
+    const string endline = detail::POSTFIX + "\n";
 
     class Fancy {
 
@@ -75,8 +94,9 @@ namespace fancy {
                 return os;
             }
 
-            string operator() (const string& text) {
-                return detail::fancy_str(text, color_, style_);
+            template<typename ...Args>
+            string operator() (const Args& ...args) {
+                return detail::fancy_str(detail::stringer(args...), color_, style_);
             }
 
             Fancy& operator| (const Color& color) {
