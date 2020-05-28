@@ -41,3 +41,7 @@ int main() {
     cout << (_fancy.reset() | Color::Yellow | Style::Underline)("无 知 即 力 量") << "\n";
 }
 ```
+
+## License
+
+- [MIT](LICENSE)
