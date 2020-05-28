@@ -21,13 +21,10 @@ jobs:
     - name: CMake generate
       run: |
         cmake --version
-        cmake . -B./build
+        cmake -Hstandalone -Bbuild/standalone
 
-    - name: To ./build
-      run: cd ./build
+    - name: Build standalone
+      run: cmake --build build/standalone
 
-    - name: Make executable
-      run: make
-
-    - name: Run main.cpp
-      run: ./fancy
+    - name: Run
+      run: ./build/standalone/run
