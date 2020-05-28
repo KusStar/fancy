@@ -6,7 +6,7 @@ project(fancy_standalone
 
 # ---- Dependencies ----
 
-include(../cmake/CPM.cmake)
+include(../build/cmake/CPM.cmake)
 
 CPMAddPackage(
   NAME fancy
