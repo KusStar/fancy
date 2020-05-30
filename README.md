@@ -14,7 +14,7 @@ include(cmake/CPM.cmake)
 CPMAddPackage(
   NAME fancy
   GITHUB_REPOSITORY KusStar/fancy
-  VERSION 0.1.0
+  VERSION 0.1.2
 )
 ```
 ## Usage
@@ -28,18 +28,17 @@ using namespace std;
 using fancy::Fancy;
 using fancy::Color;
 using fancy::Style;
-using fancy::ending;
+using fancy::endline;
 
 int main() {
 
     Fancy f;
 
-    cout << (f | Color::Red | Style::Bold) << "战 争 即 和 平" << ending;
-    cout << (f | Color::Cyan | Style::Inverse)("自 由 即 奴 役") << ending;
-    cout << (f.reset() | Color::Yellow | Style::Underline) << "无 知 即 力 量" << ending;
+    cout << (f | Color::Red | Style::Bold) << "战 争 即 和 平" << endline;
+    cout << (f | Color::Cyan | Style::Inverse) << "自 由 即 奴 役" << endline;
+    cout << (f.reset() | Color::Yellow | Style::Underline) << "无 知 即 力 量" << endline;
 
 }
-
 ```
 
 Or
