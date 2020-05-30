@@ -1,18 +1,13 @@
 #ifndef _FANCY_H
 #define _FANCY_H
 
-/**
-    @from https://stackoverflow.com/questions/2616906/how-do-i-output-coloured-text-to-a-linux-terminal
-    \033[${style};${color}m${text}\033[0m
-*/
-
 #pragma once
 
-namespace fancy {
+#include <ostream>
+#include <string>
+#include <type_traits>
 
-    #include <ostream>
-    #include <string>
-    #include <type_traits>
+namespace fancy {
 
     using namespace std;
 
