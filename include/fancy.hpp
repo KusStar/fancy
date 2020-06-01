@@ -12,8 +12,8 @@ namespace fancy {
     using namespace std;
 
     enum class Color : unsigned int {
-        Default = 29,
-        Black,
+        Default = 0,
+        Black = 30,
         Red,
         Green,
         Yellow,
@@ -34,8 +34,9 @@ namespace fancy {
     };
 
     namespace detail {
+        const string CSI = "\x1B[";
 
-        const string POSTFIX = "\033[0m";
+        const string RESET = CSI + "0m";
 
         template <typename T>
         auto enum_value(T v) -> unsigned int {
@@ -48,7 +49,7 @@ namespace fancy {
         }
 
         string prefix_str(const Color& color, const Style& style) {
-            return "\033["
+            return CSI
             + enum_str(style)
             + ";"
             + enum_str(color)
@@ -56,7 +57,7 @@ namespace fancy {
         }
 
         string fancy_str(const string& text, const Color& color, const Style& style) {
-            return prefix_str(color, style) + text + POSTFIX;
+            return prefix_str(color, style) + text + RESET;
         }
 
         template<typename Base, typename ...Rest>
@@ -72,9 +73,9 @@ namespace fancy {
 
     } // namespace fancy::detail
 
-    const string ending = detail::POSTFIX;
+    const string ending = detail::RESET;
 
-    const string endline = detail::POSTFIX + "\n";
+    const string endline = detail::RESET + "\n";
 
     class Fancy {
 
