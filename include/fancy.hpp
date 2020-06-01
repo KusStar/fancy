@@ -26,8 +26,11 @@ namespace fancy {
     enum class Style : unsigned int {
         Normal = 0,
         Bold = 1,
+        Dim = 2,
         Underline = 4,
+        Blink = 5,
         Inverse = 7,
+        Hidden = 8
     };
 
     namespace detail {
