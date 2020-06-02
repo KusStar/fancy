@@ -5,14 +5,21 @@
 
 #include <ostream>
 #include <string>
-#include <type_traits>
 
 namespace fancy {
 
     using namespace std;
 
-    enum class Color : unsigned int {
-        Default = 0,
+    enum class Attribute : unsigned int {
+        Reset = 0,
+        // Style
+        Bright = 1,
+        Dim = 2,
+        Underscore = 4,
+        Blink = 5,
+        Reverse = 7,
+        Hidden = 8,
+        // Foreground
         Black = 30,
         Red,
         Green,
@@ -20,102 +27,88 @@ namespace fancy {
         Blue,
         Magenta,
         Cyan,
-        White
-    };
-
-    enum class Style : unsigned int {
-        Normal = 0,
-        Bold = 1,
-        Dim = 2,
-        Underline = 4,
-        Blink = 5,
-        Inverse = 7,
-        Hidden = 8
+        White,
+        // Background
+        BG_Black = 40,
+        BG_Red,
+        BG_Green,
+        BG_Yellow,
+        BG_Blue,
+        BG_Magenta,
+        BG_Cyan,
+        BG_White,
     };
 
     namespace detail {
+        using uint = unsigned int;
         const string CSI = "\x1B[";
-
         const string RESET = CSI + "0m";
 
-        template <typename T>
-        auto enum_value(T v) -> unsigned int {
-            return static_cast<typename underlying_type<T>::type>(v);
+        uint enum_value(Attribute attr) { return static_cast<uint>(attr); }
+
+        string enum_str(Attribute attr) { return to_string(enum_value(attr)); }
+
+        string prefix_str(const Attribute& style, const Attribute& color) {
+            return CSI + enum_str(style) + ";" + enum_str(color) + "m";
         }
 
-        template <typename T>
-        string enum_str(T v) {
-            return to_string(enum_value(v));
+        string fancy_str(const string& text, const Attribute& style,
+                         const Attribute& color) {
+            return prefix_str(style, color) + text + RESET;
         }
 
-        string prefix_str(const Color& color, const Style& style) {
-            return CSI
-            + enum_str(style)
-            + ";"
-            + enum_str(color)
-            + "m";
-        }
-
-        string fancy_str(const string& text, const Color& color, const Style& style) {
-            return prefix_str(color, style) + text + RESET;
-        }
-
-        template<typename Base, typename ...Rest>
-        string stringer(const Base& base, const Rest& ...rest) {
+        template <typename Base, typename... Rest>
+        string stringer(const Base& base, const Rest&... rest) {
             string result = base;
             if (sizeof...(rest) > 0) {
-                const string padding = " ";
                 using List = int[];
-                (void) List { 0, ( result += padding, result += rest, 0 ) ... };
+                const string padding = " ";
+                (void)List{0, (result += padding, result += rest, 0)...};
             }
             return result;
         }
 
-    } // namespace fancy::detail
+    }  // namespace detail
 
     const string ending = detail::RESET;
 
     const string endline = detail::RESET + "\n";
 
     class Fancy {
+        Attribute style_;
+        Attribute color_;
 
-        Color color_;
-        Style style_;
+    public:
+        friend ostream& operator<<(ostream& os, const Fancy& f) {
+            os << detail::prefix_str(f.style_, f.color_);
+            return os;
+        }
 
-        public:
-            Fancy() : color_(Color::Default), style_(Style::Normal) {};
-            Fancy(const Color& color, const Style& style) : color_(color), style_(style) {};
-            Fancy(const Color& color) : color_(color) {};
-            Fancy(const Style& style) : style_(style) {};
+        template <typename... Args>
+        string operator()(const Args&... args) {
+            return detail::fancy_str(detail::stringer(args...), style_, color_);
+        }
 
-            friend ostream& operator<< (ostream& os, const Fancy& f) {
-                os << detail::prefix_str(f.color_, f.style_);
-                return os;
+        Fancy& operator|(const Attribute& attr) {
+            auto value = detail::enum_value(attr);
+            if (value == 0) {
+                reset();
+            } else if (value < 10) {
+                style_ = attr;
+            } else {
+                color_ = attr;
             }
+            return *this;
+        }
 
-            template<typename ...Args>
-            string operator() (const Args& ...args) {
-                return detail::fancy_str(detail::stringer(args...), color_, style_);
-            }
+        Fancy& reset() {
+            style_ = Attribute::Reset;
+            color_ = Attribute::Reset;
+            return *this;
+        }
 
-            Fancy& operator| (const Color& color) {
-                color_ = color;
-                return *this;
-            }
+    };  // class fancy::Fancy
 
-            Fancy& operator| (const Style& style) {
-                style_ = style;
-                return *this;
-            }
+}  // namespace fancy
 
-            Fancy& reset() {
-                color_ = Color::Default;
-                style_ = Style::Normal;
-                return *this;
-            }
-
-    }; // class fancy::Fancy
-
-} // namespace fancy
-
-#endif // _FANCY_H
+#endif  // _FANCY_H
