@@ -14,7 +14,7 @@ include(cmake/CPM.cmake)
 CPMAddPackage(
   NAME fancy
   GITHUB_REPOSITORY KusStar/fancy
-  VERSION 0.2.0
+  VERSION 0.2.1
 )
 ```
 ## Usage
